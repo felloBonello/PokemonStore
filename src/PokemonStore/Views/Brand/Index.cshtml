@@ -1,0 +1,115 @@
+﻿@model CatalogueViewModel
+
+<div class="col-sm-2 col-xs-12">&nbsp;</div>
+<div class="text-center col-sm-8 col-xs-12">
+    <form asp-controller="Brand" asp-action="SelectBrand" method="post">
+        <div class="col-sm-4 col-xs-12">&nbsp;</div>
+        <div class="col-sm-4 col-xs-12" style="padding-bottom:5%;">
+            <span style="font-size:medium;">Brands</span>
+            <select asp-for="BrandId" asp-items="@Model.GetBrands()" class="form-group form-control" onchange="this.form.submit();">
+                <option selected value="0" style="display:none;">Select Brand</option>
+            </select>
+        </div>
+        <div class="col-sm-4 col-xs-12">&nbsp;</div>
+    </form>
+    <catalogue brand="@Model.BrandId"></catalogue>
+</div>
+
+<div class="modal" id="details_popup" >
+    <div class="modal-dialog">
+        <div class="modal-content col-xs-12"  style="background-color:goldenrod">
+            <div class="modal-body">
+                <a href="" style="font-size:xx-large" data-dismiss="modal" class="pullright">X</a>
+                <div class="text-center">
+                    <img src="~/img/pokemon.png" style="width:300px; margin-top:-15px;">                   
+                    <br /><br />                 
+                </div>
+                
+                <form asp-controller="Brand" asp-action="SelectItem" method="post" role="form">
+                    <div style="align-content:center; margin: 0 auto; width:100%">
+                        @*<table class="table">
+                            <tr>
+                                <td align="center">*@
+                        <div>
+                            <div class="col-xs-6">
+                                <h4 id="ProductName" style="font-weight:bold;"></h4>
+                                <img alt="" id="detailsGraphic" class="img-responsive" />
+                            </div>
+                            @*</td>*@
+                            @*<td valign="bottom" align="right" width="100%">*@
+                            <div class="col-xs-6">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td class="col-xs-9 text-right">HP</td>
+                                        <td class="col-xs-3 text-left" id="hp"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-9 text-right">Attack</td>
+                                        <td class="col-xs-3 text-left" id="attack"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-9 text-right">Defence</td>
+                                        <td class="col-xs-3 text-left" id="defence"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-9 text-right">Special Attack</td>
+                                        <td class="col-xs-3 text-left" id="specialAttack"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-13 text-right">Special Defence</td>
+                                        <td class="colxs-2 text-left" id="specialDefence"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-13 text-right">Speed</td>
+                                        <td class="col-xs-2 text-left" id="speed"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                                @*</td>
+                            </tr>
+                        </table>*@
+                    </div>
+                    <hr />
+                    <div class="col-xs-12">
+                        <p id="Description"></p>
+                    </div>
+
+                    <hr />
+                    <table>
+                        <tr>
+                            <td class="col-xs-4 text-right">Price:</td>
+                            <td class="col-xs-2 text-left" id="CostPrice"></td>                            
+                            <td rowspan="2" class="col-xs-4 text-right">Qty:</td>
+                            <td rowspan="2" class="col-xs-2 text-left">
+                                <input asp-for="Qty" type="number" maxlength="3" size="3" min="0" style="width: 50px;" id="qty" />
+                                <input asp-for="Id" type="hidden" id="detailsId" />
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td class="col-xs-4 text-right">In Stock:</td>
+                            <td class="col-xs-2 text-left" id="QtyOnHand"></td>
+                        </tr>
+                    </table>
+                    <br/>
+
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-primary" id="modalbtn">
+                            Add To Cart
+                        </button>
+                        <button id="btnRemove" type="submit" class="btn-sm btn btn-danger">
+                            Remove Item
+                        </button>
+                        <a href="/ShoppingCart" class="btn btn-sm btn-success">View Cart</a>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div id="results" class="text-center">
+                    @ViewBag.AddMessage
+                </div>
+            </div>
+        </div><!--modal-content-->
+    </div><!--modal-dialog-->
+</div><!--modal-->

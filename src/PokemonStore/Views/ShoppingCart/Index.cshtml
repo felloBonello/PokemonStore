@@ -1,0 +1,75 @@
+﻿<div class="col-sm-3">&nbsp;</div>
+<div class="panel col-sm-6 col-xs-12" style="background-color:goldenrod">
+    <div class="panel-title text-center" style="padding-top:20px;">
+        <h3 style="font-weight:bolder">Shopping Cart</h3>
+        <img src="/img/cart.png" width="100" height="100"/>
+    </div>
+    <div class="text-center" style="padding-top:10px;">
+        @{
+            Dictionary<string, object> shoppingCart = Context.Session.GetObject<Dictionary<string,Object>>("shoppingCart");
+            decimal subtotal = 0.0M;
+            decimal tax      = 0.0M;
+            decimal total    = 0.0M;
+        }
+        <table class="table table-striped">
+            <tr style="font-weight:bolder;">
+                <th class="col-xs-2 text-center">Code</th>
+                <th class="col-xs-4 text-center">Product Name</th>
+                <th class="col-xs-3 text-center">Msrp</th>
+                <th class="col-xs-2 text-center">Qty</th>
+                <th class="col-xs-3 text-center">Extended</th>
+            </tr>
+            @{
+                if (shoppingCart != null)
+                {
+                    foreach (var key in shoppingCart.Keys)
+                    {
+                        decimal extended = 0.0M;
+                        ProductViewModel item = JsonConvert.DeserializeObject
+                            <ProductViewModel>
+                            (Convert.ToString(shoppingCart[key]));
+                        if (item.Qty > 0)
+                        {
+                            subtotal += item.MSRP * item.Qty;
+                            extended += item.MSRP * item.Qty;
+                            <tr>
+                                <td class="col-xs-2 text-center">@item.Id</td>
+                                <td class="col-xs-4 text-center">@item.ProductName</td>
+                                <td class="col-xs-3 text-center">@string.Format("{0:C}", @item.MSRP)</td>
+                                <td class="col-xs-2 text-center">@item.Qty</td>
+                                <td class="col-xs-3 text-center">@string.Format("{0:C}", @extended)</td>               
+                            </tr>
+                        }
+                    }
+                    tax = subtotal * 0.13M;
+                    total = subtotal * 1.13M;
+                }
+            }
+        </table>
+        <hr />
+        <table class="table table-striped">
+            <tr>
+                <td width="100%" align="right">Sub Total:</td>
+                <td align="right">@string.Format("{0:C}", @subtotal)</td>
+            </tr>
+            <tr>
+                <td width="100%" align="right">Tax:</td>
+                <td align="right">@string.Format("{0:C}", @tax)</td>
+            </tr>
+            <tr>
+                <td width="100%" align="right">Order Total:</td>
+                <td align="right">@string.Format("{0:C}", @total)</td>
+            </tr>
+        </table>
+        <div class="text-center">
+            <form asp-controller="ShoppingCart" asp-action="AddOrder" method="post" role="form">
+                @if (Context.Session.GetString(SessionVars.User) != null)
+                {
+                    <button type="submit" class="btn btn-sm btn-primary" id="modalbtn">Add Order</button>
+                }
+                &nbsp;<a href="/ShoppingCart/ClearShoppingCart" class="btn btn-sm btn-success">Clear Cart</a>
+            </form>
+        </div>
+        
+    </div>
+</div>
